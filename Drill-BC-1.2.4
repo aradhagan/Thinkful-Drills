@@ -1,0 +1,39 @@
+--Answer to Question 1 
+What was the hottest day in our data set? Where was that?
+SELECT
+	MAX(MaxTemperatureF), ZIP, Date
+FROM
+	weather
+GROUP BY 
+	ZIP, Date
+ORDER BY
+	MAX(MaxTemperatureF) DESC;
+  
+--Answer to Question 2  
+--How many trips started at each station?
+SELECT 
+	start_station, COUNT(trip_id) as no_of_trips
+FROM
+	trips
+GROUP BY 1;
+
+
+--Answer to Question 3  
+--What's the shortest trip that happened?
+SELECT
+	trip_id, min(duration)
+FROM
+	trips
+GROUP BY 
+	trip_id
+ORDER BY
+	min(duration);
+  
+  --Answer to Question 4 
+ --What is the average trip duration, by end station?
+SELECT
+	end_station, AVG(duration) AS AVG_trip_duration
+FROM
+	trips
+GROUP BY
+	end_station;
