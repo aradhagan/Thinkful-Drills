@@ -1,0 +1,41 @@
+--AirBnB Challenge
+--Answer to Question 1
+--What's the most expensive listing? What else can you tell me about the listing?
+SELECT *
+FROM sfo_listings
+GROUP BY price, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16
+ORDER BY price DESC
+LIMIT 10;
+
+--Answer to Question 2
+--What neighborhoods seem to be the most popular?
+--One way to define popular is by the availability i.e more often if the rooms/house is occupied more popular it is. Assumption f=free (available), t=tenant
+SELECT COUNT(available) as booked_days, l.neighbourhood
+FROM sfo_calendar c
+JOIN sfo_listings l
+ON c.listing_id = l.id
+WHERE available = 't'
+GROUP BY l.neighbourhood
+ORDER BY 1 DESC;
+--Another way to define popular is by the number of reviews i.e more often if reviews are published it is. 
+--But here the reviews can be negative...so it popular for both negative or positive reviews.
+
+SELECT SUM(reviews_per_month) as total_reviews_nebhd, neighbourhood
+FROM sfo_listings
+WHERE reviews_per_month IS NOT NULL
+GROUP BY neighbourhood
+ORDER BY 1 DESC;
+
+--Answer to Question 3
+--What time of year is the cheapest time to go to San Francisco? What about the busiest?
+--Cheapest												   
+SELECT EXTRACT(month FROM calender_date) as Months, AVG(replace((SPLIT_PART(price,'$', 2)),',','')::numeric) as Average_Price
+FROM sfo_calendar
+GROUP BY  1;
+
+---Busiest
+SELECT EXTRACT(month FROM calender_date) as Months, COUNT(Available) as Booked_places_count
+FROM sfo_calendar
+WHERE available = 't'
+GROUP BY  1;
+									  
