@@ -1,0 +1,48 @@
+--Drill 1.2.5
+--What are the three longest trips on rainy days?
+
+SELECT
+	 t.duration, trip_id, date
+FROM
+	weather w 
+JOIN
+	trips t
+ON
+	w.date = CAST(CAST(t.start_date AS DATE) AS TEXT)
+WHERE
+	w.precipitationin > 0
+GROUP BY duration, date, trip_id
+ORDER BY 1 DESC
+LIMIT 3;
+
+--Answer to Question 2 
+--Which station is full most often?
+
+SELECT	stn.name as Station_name, s.station_id, COUNT(s.timestamp) as Times_full
+FROM	status s
+JOIN	stations stn
+ON s.station_id = stn.station_id
+WHERE	s.docks_available = 0
+GROUP BY	1,2
+ORDER BY	3 DESC;
+
+--Answer to Question 3 
+--Return a list of stations with a count of number of trips starting at that station but ordered by dock count.
+
+SELECT	t.start_station, stn.station_id, COUNT(t.trip_id) as No_of_trips, stn.dockcount
+FROM	stations stn
+JOIN	trips t
+ON	stn.name = t.start_station
+GROUP BY 1, 2, 4
+ORDER BY stn.dockcount;
+
+--Answer to Question 4 
+--(Challenge) What's the length of the longest trip for each day it rains anywhere?
+
+SELECT date(start_date), MAX(duration)
+FROM trips
+JOIN weather
+ON CAST(trips.start_date as DATE) = CAST(weather.Date as DATE)
+WHERE precipitationin > 0
+GROUP BY 1
+ORDER BY 1;
